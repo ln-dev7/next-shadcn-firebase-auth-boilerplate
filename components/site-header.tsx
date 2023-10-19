@@ -29,7 +29,7 @@ export function SiteHeader() {
               <Twitter className="w-5 h-5" />
             </a>
             <a
-              href="https://github.com/ln-dev7/"
+              href="https://github.com/ln-dev7/next-shadcn-firebase-auth-boilerplate"
               className="rounded-full p-2 border flex items-center justify-center"
             >
               <Github className="w-5 h-5" />
