@@ -9,8 +9,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useToast } from "./ui/use-toast";
+import { useAuthContext } from "@/context/auth-context";
+import { useLogout } from "@/firebase/auth/logout";
 
 export function SiteHeader() {
+  const { toast } = useToast();
+  const { logout } = useLogout();
+  const { user } = useAuthContext();
   return (
     <header className="fixed top-0 z-40 w-full border-b border-b-zinc-200 bg-white dark:border-b-zinc-700 dark:bg-zinc-900">
       <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
@@ -29,42 +35,63 @@ export function SiteHeader() {
               <Twitter className="w-5 h-5" />
             </a>
             <a
-              href="https://github.com/ln-dev7/next-shadcn-firebase-auth-boilerplate"
+              href="https://github.com/ln-dev7"
               className="rounded-full p-2 border flex items-center justify-center"
             >
               <Github className="w-5 h-5" />
             </a>
           </div>
         </div>
-        <div className="flex items-center justify-end space-x-4">
-          <div className="flex items-center justify-center gap-4">
-            <Button className="" variant="destructive" type="button">
-              {false ? (
-                <Shell className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <LogOut className="mr-2 h-4 w-4" />
-              )}
-              Logout
-            </Button>
-            <Popover>
-              <PopoverTrigger>
-                <Avatar className="border-2">
-                  {/* <AvatarImage
-                    src="https://avatars.githubusercontent.com/u/62269693?v=4"
-                    alt="@ln_dev7"
-                  /> */}
-                  <AvatarFallback>LN</AvatarFallback>
-                </Avatar>
-              </PopoverTrigger>
-              <PopoverContent>
-                <Button className="w-full" variant="secondary" type="button">
-                  <Mail className="mr-2 h-4 w-4" />
-                  leonelngoya@gmail.com
-                </Button>
-              </PopoverContent>
-            </Popover>
+
+        {user ? (
+          <div className="flex items-center justify-end space-x-4">
+            <div className="flex items-center justify-center gap-4">
+              <Button
+                className=""
+                variant="destructive"
+                type="button"
+                onClick={logout}
+              >
+                {false ? (
+                  <Shell className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <LogOut className="mr-2 h-4 w-4" />
+                )}
+                Logout
+              </Button>
+              <Popover>
+                <PopoverTrigger>
+                  <Avatar className="border-2">
+                    {/* <AvatarImage
+                        src="https://avatars.githubusercontent.com/u/62269693?v=4"
+                        alt="@ln_dev7"
+                      /> */}
+                    <AvatarFallback>
+                      {user.displayName?.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <Button
+                    className="w-full"
+                    variant="secondary"
+                    type="button"
+                    onClick={() => {
+                      window.navigator.clipboard.writeText(`${user.email}`);
+                      toast({
+                        title: "Email copied",
+                        description: `${user.email}`,
+                      });
+                    }}
+                  >
+                    <Mail className="mr-2 h-4 w-4" />
+                    {user.email}
+                  </Button>
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
-        </div>
+        ) : null}
       </div>
     </header>
   );

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 import { SiteHeader } from "@/components/site-header";
+import Providers from "@/utils/providers";
 
 import "./globals.css";
 
@@ -21,8 +22,10 @@ export default function RootLayout({
     <html lang="en">
       <Toaster />
       <body className={inter.className}>
-        <SiteHeader />
-        {children}
+        <Providers>
+          <SiteHeader />
+          {children}
+        </Providers>
       </body>
     </html>
   );
