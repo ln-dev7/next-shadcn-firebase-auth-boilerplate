@@ -1,8 +1,8 @@
 ## Next Shadcn Firebase Auth Boilerplate
 
-This is a Boilerplate that uses NEXTJS - SHADCNUI - REACT HOOK FORM - ZOD - FIREBASE to create an authentication system.
+This is a Boilerplate that uses ```NEXTJS``` - ```SHADCNUI``` - ```REACT HOOK FORM``` - ```ZOD``` - ```FIREBASE``` to create an authentication system.
 
-You must therefore create your firebase project at home and fill in this information :
+You must therefore create your firebase project at home and fill in this information in your ```.env``` file
  
 ```
 NEXT_PUBLIC_FIREBASE_API_KEY="xxx"
