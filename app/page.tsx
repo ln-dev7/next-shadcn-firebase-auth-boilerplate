@@ -70,58 +70,16 @@ export default function Home() {
   }
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center px-6 py-12">
-      {user ? (
-        <div className="">
-          <h1 className="text-center text-xl font-bold">
-            {/* Hey {user.displayName} 👋 */}
-          </h1>
-        </div>
-      ) : (
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="w-full md:w-2/3 lg:w-1/2 space-y-6"
-          >
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="leonelngoya@gmail.com" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    Insert email for receive magic link
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {isMagicLinkSent && (
-              <Card className="w-full">
-                <CardHeader>
-                  <CardTitle>Link sent</CardTitle>
-                  <CardDescription>
-                    The link has been sent to the email address provided, please
-                    click to connect
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            )}
-            <Button
-              className="w-full"
-              type="submit"
-              disabled={isPendingMagicLinkLogin}
-            >
-              {isPendingMagicLinkLogin ? (
-                <Shell className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Wand2 className="mr-2 h-4 w-4" />
-              )}
-              Send magic link
-            </Button>
-            <span className="flex items-center justify-center mt-6">OR</span>
+      <div className="w-full md:w-2/3 lg:w-1/2">
+        {user ? (
+          <div className="">
+            <h1 className="text-center text-xl font-bold">
+              Connected ! <br />
+              {/* Hey {user.displayName} 👋 */}
+            </h1>
+          </div>
+        ) : (
+          <div className="w-full">
             <Button
               className="w-full"
               type="button"
@@ -135,9 +93,56 @@ export default function Home() {
               )}
               Sign in with Google
             </Button>
-          </form>
-        </Form>
-      )}
+            <span className="flex items-center justify-center mt-6">OR</span>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="w-full space-y-6"
+              >
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input placeholder="leonelngoya@gmail.com" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        Insert email for receive magic link
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {isMagicLinkSent && (
+                  <Card className="w-full">
+                    <CardHeader>
+                      <CardTitle>Link sent</CardTitle>
+                      <CardDescription>
+                        The link has been sent to the email address provided,
+                        please click to connect
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                )}
+                <Button
+                  className="w-full"
+                  type="submit"
+                  disabled={isPendingMagicLinkLogin}
+                >
+                  {isPendingMagicLinkLogin ? (
+                    <Shell className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Wand2 className="mr-2 h-4 w-4" />
+                  )}
+                  Send magic link
+                </Button>
+              </form>
+            </Form>
+          </div>
+        )}
+      </div>
       <a
         href="https://github.com/ln-dev7/next-shadcn-firebase-auth-boilerplate"
         className={`absolute bottom-4 right-4 ${buttonVariants({
