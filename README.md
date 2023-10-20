@@ -11,6 +11,7 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID="xxx"
 NEXT_PUBLIC_FIREBASE_APP_ID="xxx"
 NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID="xxx"
 ```
+![FIREBASE CONFIG](https://github.com/ln-dev7/next-shadcn-firebase-auth-boilerplate/assets/62269693/bcb549fe-e46a-45b4-9b0b-2ba5d5286057)
 
 Currently there are 3 authentication methods:
 
