@@ -4,7 +4,8 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useAuthContext } from "@/context/auth-context";
 import { useGoogleLogin } from "@/firebase/auth/googleLogin";
-import { useMagicLinkLogin } from "@/firebase/auth/magicLinkLogin";
+import { useEmailPasswordLogin } from "@/firebase/auth/emailPasswordLogin";
+import { useEmailPasswordRegistration } from "@/firebase/auth/emailPasswordRegistration";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -27,16 +28,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { Wand2, Globe2, Loader2, Shell, Github } from "lucide-react";
-
-const FormSchemaMagicLink = z.object({
-  email: z
-    .string({
-      required_error: "Email is required.",
-    })
-    .email({
-      message: "Please enter a valid email.",
-    }),
-});
 
 const FormSchemaEmailPassword = z.object({
   email: z
@@ -61,26 +52,29 @@ export default function Home() {
   const { user } = useAuthContext();
   const { googleLogin, isPendingGoogleLogin } = useGoogleLogin();
   const {
-    magicLinkLogin,
-    isPendingMagicLinkLogin,
-    errorMagicLink,
-    isMagicLinkSent,
-  } = useMagicLinkLogin();
-
-  const formMagicLink = useForm<z.infer<typeof FormSchemaMagicLink>>({
-    resolver: zodResolver(FormSchemaMagicLink),
-  });
+    emailPasswordLogin,
+    errorEmailPasswordLogin,
+    isPendingEmailPasswordLogin,
+  } = useEmailPasswordLogin();
+  const {
+    emailPasswordRegistration,
+    errorEmailPasswordRegistration,
+    isPendingEmailPasswordRegistration,
+  } = useEmailPasswordRegistration();
 
   const formEmailPassword = useForm<z.infer<typeof FormSchemaEmailPassword>>({
     resolver: zodResolver(FormSchemaEmailPassword),
   });
 
-  async function onSubmitMagicLink(data: z.infer<typeof FormSchemaMagicLink>) {
-    //await magicLinkLogin(data.email);
+  async function onSubmitEmailPasswordLogin(
+    data: z.infer<typeof FormSchemaEmailPassword>
+  ) {
+    await emailPasswordLogin(data.email, data.password);
   }
-
-  async function onSubmitEmailPassword(data: z.infer<typeof FormSchemaEmailPassword>) {
-    //await magicLinkLogin(data.email);
+  async function onSubmitEmailPasswordRegistration(
+    data: z.infer<typeof FormSchemaEmailPassword>
+  ) {
+    await emailPasswordRegistration(data.email, data.password);
   }
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center px-6 py-12">
@@ -107,56 +101,11 @@ export default function Home() {
               )}
               Sign in with Google
             </Button>
-            <span className="flex items-center justify-center mt-6">OR</span>
-            <Form {...formMagicLink}>
-              <form
-                onSubmit={formMagicLink.handleSubmit(onSubmitMagicLink)}
-                className="w-full space-y-6"
-              >
-                <FormField
-                  control={formMagicLink.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="leonelngoya@gmail.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {isMagicLinkSent && (
-                  <Card className="w-full">
-                    <CardHeader>
-                      <CardTitle>Link sent</CardTitle>
-                      <CardDescription>
-                        The link has been sent to the email address provided,
-                        please click to connect
-                      </CardDescription>
-                    </CardHeader>
-                  </Card>
-                )}
-                <Button
-                  className="w-full"
-                  type="submit"
-                  disabled={isPendingMagicLinkLogin}
-                >
-                  {isPendingMagicLinkLogin ? (
-                    <Shell className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <Wand2 className="mr-2 h-4 w-4" />
-                  )}
-                  Send magic link
-                </Button>
-              </form>
-            </Form>
-            <span className="flex items-center justify-center mt-6">OR</span>
+            <span className="flex font-semibold items-center justify-center mt-6">
+              OR
+            </span>
             <Form {...formEmailPassword}>
-              <form
-                onSubmit={formEmailPassword.handleSubmit(onSubmitEmailPassword)}
-                className="w-full space-y-6"
-              >
+              <form className="w-full space-y-6">
                 <FormField
                   control={formEmailPassword.control}
                   name="email"
@@ -190,25 +139,43 @@ export default function Home() {
                 <div className="w-full flex items-center gap-2">
                   <Button
                     className="w-full"
-                    type="submit"
-                    disabled={isPendingMagicLinkLogin}
+                    type="button"
+                    disabled={isPendingEmailPasswordLogin}
+                    onClick={formEmailPassword.handleSubmit(
+                      onSubmitEmailPasswordLogin
+                    )}
                   >
-                    {isPendingMagicLinkLogin && (
+                    {isPendingEmailPasswordLogin && (
                       <Shell className="mr-2 h-4 w-4 animate-spin" />
                     )}
                     Connexion
                   </Button>
                   <Button
                     className="w-full"
-                    type="submit"
-                    disabled={isPendingMagicLinkLogin}
+                    type="button"
+                    disabled={isPendingEmailPasswordRegistration}
+                    onClick={formEmailPassword.handleSubmit(
+                      onSubmitEmailPasswordRegistration
+                    )}
                   >
-                    {isPendingMagicLinkLogin && (
+                    {isPendingEmailPasswordRegistration && (
                       <Shell className="mr-2 h-4 w-4 animate-spin" />
                     )}
                     Register
                   </Button>
                 </div>
+                {(errorEmailPasswordLogin ||
+                  errorEmailPasswordRegistration) && (
+                  <span className="text-red-500 text-center text-sm block mt-4 font-semibold">
+                    {errorEmailPasswordLogin ===
+                      "auth/invalid-login-credentials" &&
+                      "Invalid email or password"}
+                      <br />
+                    {errorEmailPasswordRegistration ===
+                      "auth/email-already-in-use" &&
+                      "This user already exists "}
+                  </span>
+                )}
               </form>
             </Form>
           </div>
