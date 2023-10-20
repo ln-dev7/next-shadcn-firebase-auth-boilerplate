@@ -28,16 +28,30 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { Wand2, Globe2, Loader2, Shell, Github } from "lucide-react";
 
-const FormSchema = z.object({
-  // username: z.string().min(2, {
-  //   message: "Username must be at least 2 characters.",
-  // }),
+const FormSchemaMagicLink = z.object({
   email: z
     .string({
       required_error: "Email is required.",
     })
     .email({
       message: "Please enter a valid email.",
+    }),
+});
+
+const FormSchemaEmailPassword = z.object({
+  email: z
+    .string({
+      required_error: "Email is required.",
+    })
+    .email({
+      message: "Please enter a valid email.",
+    }),
+  password: z
+    .string({
+      required_error: "Password is required.",
+    })
+    .min(8, {
+      message: "Password must be at least 8 characters.",
     }),
 });
 
@@ -53,20 +67,20 @@ export default function Home() {
     isMagicLinkSent,
   } = useMagicLinkLogin();
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const formMagicLink = useForm<z.infer<typeof FormSchemaMagicLink>>({
+    resolver: zodResolver(FormSchemaMagicLink),
   });
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
-    // toast({
-    //   title: "You submitted the following values:",
-    //   description: (
-    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-    //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-    //     </pre>
-    //   ),
-    // });
-    await magicLinkLogin(data.email);
+  const formEmailPassword = useForm<z.infer<typeof FormSchemaEmailPassword>>({
+    resolver: zodResolver(FormSchemaEmailPassword),
+  });
+
+  async function onSubmitMagicLink(data: z.infer<typeof FormSchemaMagicLink>) {
+    //await magicLinkLogin(data.email);
+  }
+
+  async function onSubmitEmailPassword(data: z.infer<typeof FormSchemaEmailPassword>) {
+    //await magicLinkLogin(data.email);
   }
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center px-6 py-12">
@@ -94,13 +108,13 @@ export default function Home() {
               Sign in with Google
             </Button>
             <span className="flex items-center justify-center mt-6">OR</span>
-            <Form {...form}>
+            <Form {...formMagicLink}>
               <form
-                onSubmit={form.handleSubmit(onSubmit)}
+                onSubmit={formMagicLink.handleSubmit(onSubmitMagicLink)}
                 className="w-full space-y-6"
               >
                 <FormField
-                  control={form.control}
+                  control={formMagicLink.control}
                   name="email"
                   render={({ field }) => (
                     <FormItem>
@@ -108,9 +122,6 @@ export default function Home() {
                       <FormControl>
                         <Input placeholder="leonelngoya@gmail.com" {...field} />
                       </FormControl>
-                      <FormDescription>
-                        Insert email for receive magic link
-                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -138,6 +149,66 @@ export default function Home() {
                   )}
                   Send magic link
                 </Button>
+              </form>
+            </Form>
+            <span className="flex items-center justify-center mt-6">OR</span>
+            <Form {...formEmailPassword}>
+              <form
+                onSubmit={formEmailPassword.handleSubmit(onSubmitEmailPassword)}
+                className="w-full space-y-6"
+              >
+                <FormField
+                  control={formEmailPassword.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input placeholder="leonelngoya@gmail.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={formEmailPassword.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder="enter password"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="w-full flex items-center gap-2">
+                  <Button
+                    className="w-full"
+                    type="submit"
+                    disabled={isPendingMagicLinkLogin}
+                  >
+                    {isPendingMagicLinkLogin && (
+                      <Shell className="mr-2 h-4 w-4 animate-spin" />
+                    )}
+                    Connexion
+                  </Button>
+                  <Button
+                    className="w-full"
+                    type="submit"
+                    disabled={isPendingMagicLinkLogin}
+                  >
+                    {isPendingMagicLinkLogin && (
+                      <Shell className="mr-2 h-4 w-4 animate-spin" />
+                    )}
+                    Register
+                  </Button>
+                </div>
               </form>
             </Form>
           </div>
