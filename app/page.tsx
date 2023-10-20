@@ -4,8 +4,17 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useAuthContext } from "@/context/auth-context";
 import { useGoogleLogin } from "@/firebase/auth/googleLogin";
+import { useMagicLinkLogin } from "@/firebase/auth/magicLinkLogin";
 
 import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -37,26 +46,35 @@ export default function Home() {
 
   const { user } = useAuthContext();
   const { googleLogin, isPendingGoogleLogin } = useGoogleLogin();
+  const {
+    magicLinkLogin,
+    isPendingMagicLinkLogin,
+    errorMagicLink,
+    isMagicLinkSent,
+  } = useMagicLinkLogin();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    // toast({
+    //   title: "You submitted the following values:",
+    //   description: (
+    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+    //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+    //     </pre>
+    //   ),
+    // });
+    await magicLinkLogin(data.email);
   }
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center px-6 py-12">
       {user ? (
         <div className="">
-          <h1 className="text-center text-xl font-bold">Hey {user.displayName} 👋</h1>
+          <h1 className="text-center text-xl font-bold">
+            {/* Hey {user.displayName} 👋 */}
+          </h1>
         </div>
       ) : (
         <Form {...form}>
@@ -80,8 +98,23 @@ export default function Home() {
                 </FormItem>
               )}
             />
-            <Button className="w-full" type="submit">
-              {false ? (
+            {isMagicLinkSent && (
+              <Card className="w-full">
+                <CardHeader>
+                  <CardTitle>Link sent</CardTitle>
+                  <CardDescription>
+                    The link has been sent to the email address provided, please
+                    click to connect
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            )}
+            <Button
+              className="w-full"
+              type="submit"
+              disabled={isPendingMagicLinkLogin}
+            >
+              {isPendingMagicLinkLogin ? (
                 <Shell className="mr-2 h-4 w-4 animate-spin" />
               ) : (
                 <Wand2 className="mr-2 h-4 w-4" />

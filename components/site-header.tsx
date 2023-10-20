@@ -62,12 +62,8 @@ export function SiteHeader() {
               <Popover>
                 <PopoverTrigger>
                   <Avatar className="border-2">
-                    {/* <AvatarImage
-                        src="https://avatars.githubusercontent.com/u/62269693?v=4"
-                        alt="@ln_dev7"
-                      /> */}
                     <AvatarFallback>
-                      {user.displayName?.charAt(0)}
+                      {/* {user.displayName?.charAt(0)} */}
                     </AvatarFallback>
                   </Avatar>
                 </PopoverTrigger>
@@ -77,15 +73,15 @@ export function SiteHeader() {
                     variant="secondary"
                     type="button"
                     onClick={() => {
-                      window.navigator.clipboard.writeText(`${user.email}`);
+                      //window.navigator.clipboard.writeText(`${user.email}`);
                       toast({
                         title: "Email copied",
-                        description: `${user.email}`,
+                        //description: `${user.email}`,
                       });
                     }}
                   >
                     <Mail className="mr-2 h-4 w-4" />
-                    {user.email}
+                    {/* {user.email} */}
                   </Button>
                 </PopoverContent>
               </Popover>
