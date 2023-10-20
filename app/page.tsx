@@ -6,6 +6,7 @@ import { useAuthContext } from "@/context/auth-context";
 import { useGoogleLogin } from "@/firebase/auth/googleLogin";
 import { useEmailPasswordLogin } from "@/firebase/auth/emailPasswordLogin";
 import { useEmailPasswordRegistration } from "@/firebase/auth/emailPasswordRegistration";
+import { useEmailVerification } from "@/firebase/auth/emailVerificationLink";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -61,6 +62,12 @@ export default function Home() {
     errorEmailPasswordRegistration,
     isPendingEmailPasswordRegistration,
   } = useEmailPasswordRegistration();
+  const {
+    isEmailVerificationSent,
+    isEmailVerificationPending,
+    errorVerificationLink,
+    sendEmailVerificationLink,
+  } = useEmailVerification();
 
   const formEmailPassword = useForm<z.infer<typeof FormSchemaEmailPassword>>({
     resolver: zodResolver(FormSchemaEmailPassword),
@@ -76,15 +83,56 @@ export default function Home() {
   ) {
     await emailPasswordRegistration(data.email, data.password);
   }
+
+  const handleSendVerificationEmail = async () => {
+    try {
+      await sendEmailVerificationLink();
+    } catch (error) {
+      console.error(
+        "Erreur lors de l'envoi de l'e-mail de vérification :",
+        error.message
+      );
+    }
+  };
+
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center px-6 py-12">
       <div className="w-full md:w-2/3 lg:w-1/2">
         {user ? (
-          <div className="">
-            <h1 className="text-center text-xl font-bold">
-              Connected ! <br />
-              {/* Hey {user.displayName} 👋 */}
-            </h1>
+          <div className="w-full flex flex-col items-center gap-4">
+            <h1 className="text-center text-xl font-bold">Connected !</h1>
+            <p>
+              Hey{" "}
+              <b className="italic underline underline-offset-4">
+                {user.email}
+              </b>{" "}
+              👋
+            </p>
+            {user.emailVerified ? (
+              <p className="text-green-900 text-md font-semibold">
+                Your email is verified.
+              </p>
+            ) : (
+              <Button
+                disabled={isEmailVerificationPending}
+                onClick={handleSendVerificationEmail}
+              >
+                {isEmailVerificationPending && (
+                  <Shell className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                Send verification email
+              </Button>
+            )}
+            {isEmailVerificationSent && (
+              <p className="text-green-900 text-md font-semibold">
+                The email was successfully sent, check your email box to confirm
+              </p>
+            )}
+            {errorVerificationLink && (
+              <p className="text-red-900 text-md font-semibold">
+                {errorVerificationLink}
+              </p>
+            )}
           </div>
         ) : (
           <div className="w-full">
@@ -170,7 +218,7 @@ export default function Home() {
                     {errorEmailPasswordLogin ===
                       "auth/invalid-login-credentials" &&
                       "Invalid email or password"}
-                      <br />
+                    <br />
                     {errorEmailPasswordRegistration ===
                       "auth/email-already-in-use" &&
                       "This user already exists "}

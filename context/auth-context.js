@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import firebase_app from "@/firebase/config";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { Shell } from "lucide-react";
 
 const auth = getAuth(firebase_app);
 
@@ -17,7 +18,7 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log("user", user)
+        console.log("user", user);
         setUser(user);
       } else {
         setUser(null);
@@ -29,6 +30,14 @@ export const AuthContextProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user }}>
+      {loading ? (
+        <div className="loading-container">
+          <Shell className="w-5 h-5 animate-spin" />
+        </div>
+      ) : (
+        <>{children}</>
+      )}
+    </AuthContext.Provider>
   );
 };

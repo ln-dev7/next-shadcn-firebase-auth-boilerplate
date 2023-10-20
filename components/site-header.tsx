@@ -52,18 +52,15 @@ export function SiteHeader() {
                 type="button"
                 onClick={logout}
               >
-                {false ? (
-                  <Shell className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
                   <LogOut className="mr-2 h-4 w-4" />
-                )}
                 Logout
               </Button>
               <Popover>
                 <PopoverTrigger>
                   <Avatar className="border-2">
-                    <AvatarFallback>
-                      {/* {user.displayName?.charAt(0)} */}
+                    <AvatarFallback className="uppercase font-bold">
+                      {user.email?.charAt(0)}
+                      {user.email?.charAt(1)}
                     </AvatarFallback>
                   </Avatar>
                 </PopoverTrigger>
@@ -73,15 +70,15 @@ export function SiteHeader() {
                     variant="secondary"
                     type="button"
                     onClick={() => {
-                      //window.navigator.clipboard.writeText(`${user.email}`);
+                      window.navigator.clipboard.writeText(`${user.email}`);
                       toast({
                         title: "Email copied",
-                        //description: `${user.email}`,
+                        description: `${user.email}`,
                       });
                     }}
                   >
                     <Mail className="mr-2 h-4 w-4" />
-                    {/* {user.email} */}
+                    {user.email}
                   </Button>
                 </PopoverContent>
               </Popover>
