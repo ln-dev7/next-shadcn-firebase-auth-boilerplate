@@ -10,3 +10,17 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID="xxx"
 NEXT_PUBLIC_FIREBASE_APP_ID="xxx"
 NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID="xxx"
 ```
+
+Currently there are 3 authentication methods:
+
+- Google
+- Email/Password
+- GitHub
+
+### GOOGLE
+
+### EMAIL / PASSWORD
+
+### GITHUB
+
+

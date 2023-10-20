@@ -223,6 +223,22 @@ export default function Home() {
                 )}
               </form>
             </Form>
+            <span className="flex font-semibold items-center justify-center my-6">
+              OR
+            </span>
+            <Button
+              className="w-full"
+              type="button"
+              // onClick={googleLogin}
+              // disabled={isPendingGoogleLogin}
+            >
+              {/* {isPendingGoogleLogin ? (
+                <Shell className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Github className="mr-2 h-4 w-4" />
+              )} */}
+              Sign in with GitHub
+            </Button>
           </div>
         )}
       </div>
