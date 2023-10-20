@@ -6,7 +6,11 @@ import { Shell } from "lucide-react";
 const auth = getAuth(firebase_app);
 
 export const AuthContext = createContext({
-  user: null,
+  user: {
+    email: "",
+    emailVerified: "",
+    displayName: "",
+  },
 });
 
 export const useAuthContext = () => useContext(AuthContext);
@@ -18,7 +22,7 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log("user", user);
+        //console.log("user", user);
         setUser(user);
       } else {
         setUser(null);

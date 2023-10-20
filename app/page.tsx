@@ -88,10 +88,7 @@ export default function Home() {
     try {
       await sendEmailVerificationLink();
     } catch (error) {
-      console.error(
-        "Erreur lors de l'envoi de l'e-mail de vérification :",
-        error.message
-      );
+      console.error(error);
     }
   };
 
