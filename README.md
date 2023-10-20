@@ -18,9 +18,14 @@ Currently there are 3 authentication methods:
 - GitHub
 
 ### GOOGLE
+![Capture d’écran 2023-10-19 à 09 38 48](https://github.com/ln-dev7/next-shadcn-firebase-auth-boilerplate/assets/62269693/ed0787d2-9eb2-4bef-a977-71ae7a16820d)
 
 ### EMAIL / PASSWORD
+![Capture d’écran 2023-10-19 à 12 14 39](https://github.com/ln-dev7/next-shadcn-firebase-auth-boilerplate/assets/62269693/e2f13346-9cec-4454-932d-ae40e6a1614c)
 
 ### GITHUB
+You must create your application on your github to have this information https://github.com/settings/developers
+
+![Capture d’écran 2023-10-20 à 20 28 09](https://github.com/ln-dev7/next-shadcn-firebase-auth-boilerplate/assets/62269693/1fe2520c-3b8b-4149-9929-a7bc042931c0)
 
 
