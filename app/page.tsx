@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useAuthContext } from "@/context/auth-context";
 import { useGoogleLogin } from "@/firebase/auth/googleLogin";
+import { useGithubLogin } from "@/firebase/auth/githubLogin";
 import { useEmailPasswordLogin } from "@/firebase/auth/emailPasswordLogin";
 import { useEmailPasswordRegistration } from "@/firebase/auth/emailPasswordRegistration";
 import { useEmailVerification } from "@/firebase/auth/emailVerificationLink";
@@ -52,6 +53,7 @@ export default function Home() {
 
   const { user } = useAuthContext();
   const { googleLogin, isPendingGoogleLogin } = useGoogleLogin();
+  const { githubLogin, isPendingGithubLogin } = useGithubLogin();
   const {
     emailPasswordLogin,
     errorEmailPasswordLogin,
@@ -110,15 +112,20 @@ export default function Home() {
                 Your email is verified.
               </p>
             ) : (
-              <Button
-                disabled={isEmailVerificationPending}
-                onClick={handleSendVerificationEmail}
-              >
-                {isEmailVerificationPending && (
-                  <Shell className="mr-2 h-4 w-4 animate-spin" />
-                )}
-                Send verification email
-              </Button>
+              <>
+                <p className="text-red-600 text-md font-semibold">
+                  Your email is not verified.
+                </p>
+                <Button
+                  disabled={isEmailVerificationPending}
+                  onClick={handleSendVerificationEmail}
+                >
+                  {isEmailVerificationPending && (
+                    <Shell className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  Send verification email
+                </Button>
+              </>
             )}
             {isEmailVerificationSent && (
               <p className="text-green-900 text-md font-semibold">
@@ -229,14 +236,14 @@ export default function Home() {
             <Button
               className="w-full"
               type="button"
-              // onClick={googleLogin}
-              // disabled={isPendingGoogleLogin}
+              onClick={githubLogin}
+              disabled={isPendingGithubLogin}
             >
-              {/* {isPendingGoogleLogin ? (
+              {isPendingGithubLogin ? (
                 <Shell className="mr-2 h-4 w-4 animate-spin" />
               ) : (
                 <Github className="mr-2 h-4 w-4" />
-              )} */}
+              )}
               Sign in with GitHub
             </Button>
           </div>
