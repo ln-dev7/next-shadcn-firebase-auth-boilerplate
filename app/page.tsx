@@ -117,7 +117,12 @@ export default function Home() {
                   Your email is not verified.
                 </p>
                 <Button
-                  disabled={isEmailVerificationPending}
+                  disabled={
+                    isPendingGoogleLogin ||
+                    isPendingEmailPasswordLogin ||
+                    isPendingEmailPasswordRegistration ||
+                    isEmailVerificationPending
+                  }
                   onClick={handleSendVerificationEmail}
                 >
                   {isEmailVerificationPending && (
@@ -143,8 +148,14 @@ export default function Home() {
             <Button
               className="w-full"
               type="button"
+              variant="secondary"
               onClick={googleLogin}
-              disabled={isPendingGoogleLogin}
+              disabled={
+                isPendingGoogleLogin ||
+                isPendingEmailPasswordLogin ||
+                isPendingEmailPasswordRegistration ||
+                isEmailVerificationPending
+              }
             >
               {isPendingGoogleLogin ? (
                 <Shell className="mr-2 h-4 w-4 animate-spin" />
@@ -153,7 +164,29 @@ export default function Home() {
               )}
               Sign in with Google
             </Button>
-            <span className="flex font-semibold items-center justify-center mt-6">
+            <span className="flex font-semibold items-center justify-center my-6">
+              OR
+            </span>
+            <Button
+              className="w-full"
+              type="button"
+              variant="outline"
+              onClick={githubLogin}
+              disabled={
+                isPendingGoogleLogin ||
+                isPendingEmailPasswordLogin ||
+                isPendingEmailPasswordRegistration ||
+                isEmailVerificationPending
+              }
+            >
+              {isPendingGithubLogin ? (
+                <Shell className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Github className="mr-2 h-4 w-4" />
+              )}
+              Sign in with GitHub
+            </Button>
+            <span className="flex font-semibold items-center justify-center my-6">
               OR
             </span>
             <Form {...formEmailPassword}>
@@ -192,7 +225,12 @@ export default function Home() {
                   <Button
                     className="w-full"
                     type="button"
-                    disabled={isPendingEmailPasswordLogin}
+                    disabled={
+                      isPendingGoogleLogin ||
+                      isPendingEmailPasswordLogin ||
+                      isPendingEmailPasswordRegistration ||
+                      isEmailVerificationPending
+                    }
                     onClick={formEmailPassword.handleSubmit(
                       onSubmitEmailPasswordLogin
                     )}
@@ -205,7 +243,12 @@ export default function Home() {
                   <Button
                     className="w-full"
                     type="button"
-                    disabled={isPendingEmailPasswordRegistration}
+                    disabled={
+                      isPendingGoogleLogin ||
+                      isPendingEmailPasswordLogin ||
+                      isPendingEmailPasswordRegistration ||
+                      isEmailVerificationPending
+                    }
                     onClick={formEmailPassword.handleSubmit(
                       onSubmitEmailPasswordRegistration
                     )}
@@ -230,22 +273,6 @@ export default function Home() {
                 )}
               </form>
             </Form>
-            <span className="flex font-semibold items-center justify-center my-6">
-              OR
-            </span>
-            <Button
-              className="w-full"
-              type="button"
-              onClick={githubLogin}
-              disabled={isPendingGithubLogin}
-            >
-              {isPendingGithubLogin ? (
-                <Shell className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Github className="mr-2 h-4 w-4" />
-              )}
-              Sign in with GitHub
-            </Button>
           </div>
         )}
       </div>
@@ -253,7 +280,7 @@ export default function Home() {
         href="https://github.com/ln-dev7/next-shadcn-firebase-auth-boilerplate"
         className={`absolute bottom-4 right-4 ${buttonVariants({
           size: "lg",
-          variant: "outline",
+          variant: "destructive",
         })}`}
       >
         <Github className="w-5 h-5 mr-2" />
